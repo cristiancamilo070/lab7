@@ -29,21 +29,31 @@ public class MainActivity extends AppCompatActivity {
         list = findViewById(R.id.list);
 
         list.setAdapter(arrayAdapter);
-        getPosts();
+        //getPosts();
+        getPostId(1);
+        getPostId(2);
+
+        //añadir
+        Post post = new Post();
+        post.setUserId(211);
+        post.setId(211);
+        post.setBody("cris");
+        post.setTitle("lab");
+
+        addPost(post);
     }
 
-    private void getPosts() {
+    private void getPosts(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://jsonplaceholder.typicode.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         PostService postService = retrofit.create(PostService.class);
         Call<List<Post>> call = postService.getPost();
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                for (Post post : response.body()){
+                for(Post post: response.body()){
                     titles.add(post.getTitle());
                 }
                 arrayAdapter.notifyDataSetChanged();
@@ -51,8 +61,37 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-
             }
         });
+
+    }
+
+    private void getPostId(int id){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://jsonplaceholder.typicode.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PostService postService = retrofit.create(PostService.class);
+        Call<Post> call = postService.getPostId(id);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                titles.add(response.body().getTitle());
+                arrayAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+            }
+        });
+    }
+
+    private void addPost(Post post){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://jsonplaceholder.typicode.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PostService postService = retrofit.create(PostService.class);
+        Call<Post> call = postService.addPost(post);
     }
 }
