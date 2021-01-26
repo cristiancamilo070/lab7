@@ -20,8 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter arrayAdapter;
     private ListView list;
     private ArrayList<String> titles = new ArrayList<>();
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
